@@ -73,10 +73,41 @@ const post_update = (req, res) => {
 
     console.log('Post has been updated');
     res.end();
+}
 
+const post_vote = (req, res) => {
+    // Login, and check legitimacy of user
+    const postid = req.params.postid;
 
-module.exports = {
+    Post.findOneAndUpdate(
+        {_id: postid},
+        {$inc: {likes: 1}},
+        (error) => {
+            if (error) { console.log(error) }
+        }
+    )
+    res.send('You have voted on the post');
+}
+
+const post_del = (req, res) => {
+    // Login to authenticate a user and check if postid belongs to user
+    const postid = req.params.postid;
+
+    Post.findOneAndDelete({postid: postid})
+        .then((result) => {
+            console.log('Post deleted');
+            // res.json({ redirect: '/users'});
+            res.redirect('/post/all')
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+}
+
+module.exports = {    
     post_all,
     post_create,
-    post_update
-}
+    post_update,
+    post_vote,
+    post_del
+};

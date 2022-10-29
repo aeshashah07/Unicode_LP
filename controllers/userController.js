@@ -39,6 +39,9 @@ const user_get = (req, res) => {
             if (user) {
                 // Can provide authentication; to view any profile, login
                 res.send(user);}
+            else {
+                res.send("User doesn't exist or kindly change the url");
+            }
         })
         .catch((error) => {
                 res.send('User does not exist')
@@ -66,7 +69,7 @@ const user_delete = (req, res) => {
         .then((result) => {
             console.log('User ', username, ' deleted');
             // res.json({ redirect: '/users'});
-            res.redirect('/users')
+            res.redirect('/user/all')
         })
         .catch((error) => {
             console.log(error);
