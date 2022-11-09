@@ -1,7 +1,7 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const User = require('./models/user');
 const Post = require('./models/post');
+require('./db');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -15,17 +15,9 @@ app.use(bodyParser.json());
 // app.use(express.urlencoded({extended: false}));
 
 
-const dbURI = process.env.MONGO_URI;
-mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('Database is connected'))
-    .catch((err) => console.log(err));
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "MongoDB connection error:"));
-
-
 app.get('/', (req, res) => {
     console.log("Welcome");
-    res.send('Start Page');
+    res.status(200).send('Start Page');
 });
 
 app.use('/user', userRoutes);
@@ -33,7 +25,7 @@ app.use('/user', userRoutes);
 app.use('/post', postRoutes);
 
 app.get('*', (req, res) => {
-    res.send('404! This is an invalid URL.');
+    res.status(404).send('404! This is an invalid URL.');
   });
 
 

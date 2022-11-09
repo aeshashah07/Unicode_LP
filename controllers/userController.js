@@ -3,12 +3,18 @@ const User = require('../models/user');
 const user_all = (req, res) => {
     User.find()
         .then((result) => {
-            res.send(result);
+            res.status(200).json({
+                success: true,
+                data: result
+            });
             console.log('All users fetched successfully');
         })
         .catch((error) => {
+            res.status(404).json({
+                success: false,
+                message: error.message
+            });
             console.log(error);
-            res.send('404! N.');
         })
 }
 
@@ -25,10 +31,17 @@ const user_create = (req, res) => {
     user.save()
         .then((result) => {
             console.log('User saved')
-            res.send(result)
+            res.status(201).json({
+                success: true,
+                data: result
+            })
         })
         .catch((err) => {
             console.log(err);
+            res.status(400).json({
+                success: false,
+                message: err.message
+            })
         });
 }
 
@@ -38,13 +51,25 @@ const user_get = (req, res) => {
         .then((user) => {
             if (user) {
                 // Can provide authentication; to view any profile, login
-                res.send(user);}
+                res.status(200).json({
+                    success: true,
+                    data: user
+                });
+            }
             else {
-                res.send("User doesn't exist or kindly change the url");
+                console.log("User doesn't exist or kindly change the url");
+                res.status(400).json({
+                    success: false,
+                    message: "User doesn't exist or kindly change the url"
+                })
             }
         })
         .catch((error) => {
-                res.send('User does not exist')
+                console.log('User does not exist');
+                res.status(404).json({
+                    success: false,
+                    message: error.message
+                })
         })
 }
 
@@ -54,12 +79,19 @@ const user_update = (req, res) => {
         {username: username},
         {$set: req.body},
         (error) => {
-            if (error) { console.log(error) }
+            if (error) { 
+                res.status(404).json({
+                    success: false,
+                    message: error.message
+                }) 
+            }
         }
     )
 
     console.log('Data has been updated');
-    res.end();
+    res.status(200).json({
+        success: true
+    });
 }
 
 const user_delete = (req, res) => {
@@ -68,11 +100,18 @@ const user_delete = (req, res) => {
     User.findOneAndDelete({username: username})
         .then((result) => {
             console.log('User ', username, ' deleted');
+            res.status(200).json({
+                success: true
+            })
             // res.json({ redirect: '/users'});
             res.redirect('/user/all')
         })
         .catch((error) => {
             console.log(error);
+            res.status(404).json({
+                success: false,
+                message: error.message
+            }) 
         })
 }
 
