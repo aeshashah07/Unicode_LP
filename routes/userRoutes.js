@@ -3,6 +3,11 @@ const User = require('../models/user');
 const router = express.Router();
 const userController = require('../controllers/userController');
 
+// User login
+router.post('/login', userController.user_login);
+
+// User logout
+router.get('/logout', userController.user_logout);
 
 // Fetch all users
 router.get('/all', userController.user_all);

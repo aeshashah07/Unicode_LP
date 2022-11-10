@@ -12,7 +12,6 @@ app = express();
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
-// app.use(express.urlencoded({extended: false}));
 
 
 app.get('/', (req, res) => {

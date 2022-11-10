@@ -24,11 +24,16 @@ const post_all = async(req, res) => {
 const post_create = async(req, res) => {
     console.log(req.body);
     now = Date.now();
-    // Login to get username
+    
+    // To check if the logged user is making the post
+    if (req.username != req.body.created_by) return res.status(403).json({
+        success: false,
+        message: 'The user accessing the token not same as the post creator'
+    })
+
     const post = new Post({
         title: req.body.title,
         text: req.body.text,
-        // Use the login username
         created_by: req.body.created_by,
         uploaded_on: now
     });
@@ -51,11 +56,9 @@ const post_create = async(req, res) => {
 }
 
 const post_update = async(req, res) => {
-    // Login, and obtain username
-    // const username = req.params.username;
+    const username = req.username
     const postid = req.params.postid;
 
-    // Check if that user indeed does have post with that id
     try {
         data = await Post.findOneAndUpdate(
             {_id: postid},
@@ -74,7 +77,6 @@ const post_update = async(req, res) => {
 }
 
 const post_vote = async(req, res) => {
-    // Login, and check legitimacy of user
     const postid = req.params.postid;
 
     try {
@@ -94,7 +96,6 @@ const post_vote = async(req, res) => {
     }    
 }
 
-// Deletion takes place, but nodemon needs to be restarted
 const post_del = async(req, res) => {
     // Login to authenticate a user and check if postid belongs to user
     const postid = req.params.postid;
@@ -105,7 +106,6 @@ const post_del = async(req, res) => {
         res.status(200).json({
             success: true,
         });
-        res.redirect('/post/all');
 
     } catch (error) {
         console.log(error);
