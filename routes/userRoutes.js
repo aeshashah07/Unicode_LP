@@ -14,10 +14,10 @@ router.post('/create', userController.user_create);
 router.get('/:username', userController.user_get);
 
 // Update user
-router.post('/update/:username/:postid', userController.user_update);
+router.put('/update/:username', userController.user_update);
 
 // Delete user
-router.post('/delete/:username', userController.user_delete);
+router.delete('/delete/:username', userController.user_delete);
 
 
 module.exports = router;
